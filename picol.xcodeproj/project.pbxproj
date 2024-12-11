@@ -10,9 +10,25 @@
 		982B9FD52D084FE400A3B3AC /* picol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = picol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		98D75C972D09BF5900A3F999 /* Exceptions for "picol" folder in "picol" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Extensions/.keep,
+				Services/.keep,
+				ViewModels/.keep,
+				Views/Components/.keep,
+			);
+			target = 982B9FD42D084FE400A3B3AC /* picol */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		982B9FD72D084FE400A3B3AC /* picol */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				98D75C972D09BF5900A3F999 /* Exceptions for "picol" folder in "picol" target */,
+			);
 			path = picol;
 			sourceTree = "<group>";
 		};
