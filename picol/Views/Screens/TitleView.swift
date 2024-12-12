@@ -16,7 +16,8 @@ struct TitleView: View {
             VStack {
                 Image(isOn ? "logoOn" : "logoOff")
                     .resizable()
-                    .padding([.top, .leading, .trailing], 20.0)
+                    .padding([.leading, .trailing], 20.0)
+                    .padding(.top, 120.0)
                     .scaledToFit()
 
                 Spacer()
@@ -24,7 +25,7 @@ struct TitleView: View {
                     Image("titleChar")
                         .resizable()
                         .scaledToFit()
-                        .padding(.bottom, 20.0)
+                        .padding(.bottom, 100.0)
                 }
             }.animation(.easeInOut(duration: 0.5), value: isOn)
 
@@ -39,10 +40,10 @@ struct TitleView: View {
             DragGesture()
                 // 下方向に100px以上ドラッグしたらトリガー
                 .onEnded { value in
-                    if value.translation.height > 100 {
-                        isOn.toggle()
+                    if value.translation.height > 100 && isOn {
+                        isOn = false
                         delay(0.5) {
-                            showOverlay.toggle()
+                            showOverlay = true
                             delay(2) {
                                 onStart()
                             }
