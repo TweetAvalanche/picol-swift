@@ -26,13 +26,14 @@ struct BackgroundModifier: ViewModifier {
 
             // 背景画像を設定
             if let imageName = imageName {
-                Image(imageName)
+                Color.clear.overlay(
+                    Image(imageName)
                     .resizable()
-                    .scaledToFill()
+                    .aspectRatio(contentMode: .fill)
                     .opacity(darken ? 0.5 : 1.0)
                     .transition(transition)
                     .animation(animation, value: imageName)
-                    .edgesIgnoringSafeArea(.all)
+                ).edgesIgnoringSafeArea(.all)
             }
 
             // コンテンツを前面に表示
@@ -42,7 +43,7 @@ struct BackgroundModifier: ViewModifier {
 }
 
 extension View {
-    /// 背景画像と背景色を適用するカスタムモディファイア
+    /// 背景画像を適用するカスタムモディファイア
     /// - Parameters:
     ///   - imageName: Assets.xcassetsに登録された画像名（オプショナル）
     ///   - darken: 背景画像を暗くするかどうか
@@ -52,8 +53,8 @@ extension View {
     }
 
     /// 背景色を適応するカスタムモディファイア
-    /// - Parameters
-    ///    - colorName: Assets.xcassetsに登録されたカラー名
+    /// - Parameters:
+    ///   - colorName: Assets.xcassetsに登録されたカラー名
     /// - Returns: 背景色が適用されたビュー
     func backgroundColor(_ colorName: String) -> some View {
         self.modifier(BackgroundModifier(colorName: colorName))
