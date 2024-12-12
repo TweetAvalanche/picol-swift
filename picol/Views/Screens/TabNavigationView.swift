@@ -21,6 +21,11 @@ struct TabNavigationView: View {
                             Image(systemName: "house")
                             Text("Home")
                         }
+                    CameraView()
+                        .tabItem {
+                            Image(systemName: "camera")
+                            Text("Camera")
+                        }
                 }
             }
         }
