@@ -7,9 +7,17 @@ import SwiftUI
 
 @main
 struct picolApp: App {
+    @State private var showMainView = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if showMainView {
+                ContentView()
+            } else {
+                TitleView(onStart: {
+                    showMainView = true
+                })
+            }
         }
     }
 }
