@@ -12,7 +12,7 @@ struct picolApp: App {
     var body: some Scene {
         WindowGroup {
             if showMainView {
-                ContentView()
+                TabNavigationView()
             } else {
                 TitleView(onStart: {
                     showMainView = true
