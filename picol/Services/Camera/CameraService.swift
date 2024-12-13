@@ -7,6 +7,7 @@ import AVFoundation
 import UIKit
 
 class CameraService: NSObject, ObservableObject {
+    @Published var isAuthorized = false
     @Published var capturedImage: UIImage?
     @Published var isSessionRunning = false
     
@@ -17,6 +18,25 @@ class CameraService: NSObject, ObservableObject {
     
     override init() {
         super.init()
+    }
+    
+    // MARK: - Permissions
+    func requestAuthorization() async {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            await MainActor.run {
+                self.isAuthorized = true
+            }
+        case .notDetermined:
+            let granted = await AVCaptureDevice.requestAccess(for: .video)
+            await MainActor.run {
+                self.isAuthorized = granted
+            }
+        default:
+            await MainActor.run {
+                self.isAuthorized = false
+            }
+        }
     }
     
     // MARK: - Session Control
