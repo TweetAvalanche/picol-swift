@@ -7,6 +7,7 @@ import Foundation
 
 class TokenViewModel: ObservableObject {
     @Published var transmitterToken: String?
+    @Published var isTransmitterToken: Bool = false
     @Published var receivedUser: User?
     private let tokenAPI = TokenAPI()
     private let keychain = KeychainManager.shared
@@ -19,6 +20,7 @@ class TokenViewModel: ObservableObject {
                 guard let self = self else { return }
                 switch result {
                 case .success(let data):
+                    self.isTransmitterToken = true
                     self.transmitterToken = data.token
                     print("data: \(data)")
                 case .failure(let error):

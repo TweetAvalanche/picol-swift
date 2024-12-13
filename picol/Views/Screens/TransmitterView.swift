@@ -18,8 +18,8 @@ struct TransmitterView: View {
                 let encodedData = flashTransmitter.makeHexSendData(hex: tokenViewModel.transmitterToken!)
                 flashTransmitter.send(data: encodedData)
             }, label: {
-                if tokenViewModel.transmitterToken != nil {
-                    Text("送信\n\(tokenViewModel.transmitterToken!)")
+                if tokenViewModel.isTransmitterToken {
+                    Text("送信")
                         .font(.title)
                         .padding()
                         .background(Color.blue)
@@ -30,11 +30,15 @@ struct TransmitterView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .foregroundColor(.white)
                 }
-            }).disabled(tokenViewModel.transmitterToken == nil)
+            }).disabled(tokenViewModel.isTransmitterToken)
         }
         .backgroundImage("MultiBackground")
         .onAppear {
             tokenViewModel.createToken()
         }
     }
+}
+
+#Preview {
+    TransmitterView(flashTransmitter: FlashTransmitter(), tokenViewModel: TokenViewModel())
 }

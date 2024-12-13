@@ -30,6 +30,18 @@
           }
         }
       }
+    },
+    "NSCameraUsageDescription" : {
+      "comment" : "Privacy - Camera Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "カメラ使うよ！"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
