@@ -241,7 +241,8 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         return accuracy
     }
 
-    private func decode(_ encodeData: [Bool]) -> [Bool] {
+    private func decode(_ encodedBits: [Bool]) -> [Bool] {
+        var encodedBits = encodedBits
         // パリティチェック
         let parityPositions: [Int] = [1,2,4,8,16]
         var errorPosition = 0
@@ -265,14 +266,14 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
 
         // 復元するデータビットを抽出
         let paritySet = Set(parityPositions)
-        var decodedData: [Bool] = []
+        var decodedBits: [Bool] = []
         for i in 1...29 {
             if !paritySet.contains(i) {
-                decodedData.append(encodedBits[i - 1])
+                decodedBits.append(encodedBits[i - 1])
             }
         }
 
-        return decodedData
+        return decodedBits
     }
 
     // MARK: - Debug / UI Update
