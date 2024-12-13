@@ -5,12 +5,7 @@
 
 import Foundation
 
-struct User: Codable {
-    let uid: Int
-    let user_message: String
-    let cid: String
-    let character_name: String
-}
+
 
 class UserAPI {
     func createUser(completion: @escaping (Result<User, Error>) -> Void) {
