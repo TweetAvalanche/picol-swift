@@ -7,6 +7,7 @@ import SwiftUI
 
 struct TransmitterView: View {
     @ObservedObject var flashTransmitter = FlashTransmitter()
+    @StateObject var tokenViewModel = TokenViewModel()
     
     var body: some View {
         VStack {
@@ -14,11 +15,26 @@ struct TransmitterView: View {
                 .font(.title)
                 .padding()
             Button(action: {
-                let encodedData = flashTransmitter.makeHexSendData(hex: "123abc")
+                let encodedData = flashTransmitter.makeHexSendData(hex: tokenViewModel.transmitterToken!)
                 flashTransmitter.send(data: encodedData)
             }, label: {
-                Text("送信")
-            })
-        }.backgroundImage("MultiBackground")
+                if tokenViewModel.transmitterToken != nil {
+                    Text("送信\n\(tokenViewModel.transmitterToken!)")
+                        .font(.title)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                } else {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .foregroundColor(.white)
+                }
+            }).disabled(tokenViewModel.transmitterToken == nil)
+        }
+        .backgroundImage("MultiBackground")
+        .onAppear {
+            tokenViewModel.createToken()
+        }
     }
 }

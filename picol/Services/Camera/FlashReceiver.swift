@@ -14,6 +14,9 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     @Published var fps: Double = 0.0
     @Published var processingTime: Double = 0.0
     @Published var lastReceivedData: String = ""
+    @Published var receivedUserData: User?
+    
+    private let tokenViewModel = TokenViewModel()
 
     // セッション関連
     private let session = AVCaptureSession()
@@ -207,7 +210,12 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
                 if dataBitBuffer.count == dataBitCount {
                     isReceivingData = false
                     let decodedBit = decode(dataBitBuffer)
-                    updateLastReceivedData(decodedBit)
+                    let hexData = bitToHex(decodedBit)
+                    updateLastReceivedData(hexData)
+                    tokenViewModel.loadToken(token: hexData) {
+                        print("loadToken completion")
+                        self.receivedUserData = self.tokenViewModel.receivedUser
+                    }
                     dataBitBuffer = []
                 }
             }
@@ -277,7 +285,16 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         print("decode: \(decodedBits)")
         return decodedBits
     }
-
+    
+    private func bitToHex(_ bits: [Bool]) -> String {
+        let binaryString = bits.map { $0 ? "1" : "0" }.joined()
+        guard let decimal = Int(binaryString, radix: 2) else {
+            print("Invalid data: \(bits)")
+            return ""
+        }
+        return String(format: "%06X", decimal)
+    }
+    
     // MARK: - Debug / UI Update
     func updateFPS(_ currentTime: CMTime) {
         if lastFrameTime.isValid {
@@ -304,14 +321,9 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         }
     }
 
-    func updateLastReceivedData(_ decodedData: [Bool]) {
+    func updateLastReceivedData(_ hexData: String) {
         DispatchQueue.main.async {
-            let binaryString = decodedData.map { $0 ? "1" : "0" }.joined()
-            guard let decimal = Int(binaryString, radix: 2) else {
-                print("Invalid data: \(decodedData)")
-                return
-            }
-            self.lastReceivedData = String(format: "%06X", decimal)
+            self.lastReceivedData = hexData
         }
     }
 }
