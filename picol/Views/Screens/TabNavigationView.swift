@@ -26,6 +26,11 @@ struct TabNavigationView: View {
                             Image(systemName: "antenna.radiowaves.left.and.right")
                             Text("Receive")
                         }
+                    TransmitterView()
+                        .tabItem {
+                            Image(systemName: "paperplane")
+                            Text("Send")
+                        }
                 }
             }
         }

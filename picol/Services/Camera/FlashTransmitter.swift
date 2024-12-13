@@ -95,7 +95,7 @@ class FlashTransmitter: ObservableObject {
         let binary = String(decimal, radix: 2)
         let binaryArray = Array(binary)
 
-        let paddingCount = 32 - binaryArray.count
+        let paddingCount = 24 - binaryArray.count
 
         for _ in 0..<paddingCount {
             encodedBits.append(false)

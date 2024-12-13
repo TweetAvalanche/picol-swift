@@ -35,7 +35,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     private var isReceivingData = false
     private var startAccuracyList: [Double] = [0.0, 0.0, 0.0]
     private var dataFrameBuffer: [Bool] = []
-    private var dataBitBuffer: [Int] = []
+    private var dataBitBuffer: [Bool] = []
     private var maxLuminance: CGFloat = 0.0
     private var lastFrameTime: CMTime = CMTime.invalid
 
@@ -197,7 +197,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
             if dataFrameBuffer.count == framesPerBit {
                 let brightCount = dataFrameBuffer.filter{$0}.count
                 let bitPattern = (brightCount > framesPerBit/2)
-                dataBitBuffer.append(bitPattern ? 1 : 0)
+                dataBitBuffer.append(bitPattern)
                 dataFrameBuffer = []
 
                 DispatchQueue.main.async {
@@ -206,7 +206,8 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
 
                 if dataBitBuffer.count == dataBitCount {
                     isReceivingData = false
-                    updateLastReceivedData(dataBitBuffer)
+                    let decodedBit = decode(dataBitBuffer)
+                    updateLastReceivedData(decodedBit)
                     dataBitBuffer = []
                 }
             }
@@ -273,7 +274,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
                 decodedBits.append(encodedBits[i - 1])
             }
         }
-
+        print("decode: \(decodedBits)")
         return decodedBits
     }
 
@@ -303,14 +304,14 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         }
     }
 
-    func updateLastReceivedData(_ data: [Int]) {
+    func updateLastReceivedData(_ decodedData: [Bool]) {
         DispatchQueue.main.async {
-            let binaryString = data.map { String($0) }.joined()
+            let binaryString = decodedData.map { $0 ? "1" : "0" }.joined()
             guard let decimal = Int(binaryString, radix: 2) else {
-                print("Invalid data: \(data)")
+                print("Invalid data: \(decodedData)")
                 return
             }
-            self.lastReceivedData = String(format: "%08X", decimal)
+            self.lastReceivedData = String(format: "%06X", decimal)
         }
     }
 }
