@@ -21,6 +21,11 @@ struct TabNavigationView: View {
                             Image(systemName: "house")
                             Text("Home")
                         }
+                    ReceiverView()
+                        .tabItem {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                            Text("Receive")
+                        }
                 }
             }
         }

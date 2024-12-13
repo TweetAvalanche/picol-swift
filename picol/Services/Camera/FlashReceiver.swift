@@ -42,6 +42,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     // MARK: - Initialization
     override init() {
         super.init()
+        configureSession()
     }
 
     func configureSession() {

@@ -36,7 +36,14 @@ struct ReceiverView: View {
             .padding(10)
             .aspectRatio(1, contentMode: .fit)
             Spacer()
-        }.backgroundImage("MainBackground")
+        }
+        .backgroundImage("MainBackground")
+        .onAppear {
+            flashReceiver.startSession()
+        }
+        .onDisappear {
+            flashReceiver.stopSession()
+        }
     }
 }
 
