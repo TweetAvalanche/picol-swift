@@ -13,20 +13,29 @@ struct TitleView: View {
 
     var body: some View {
         ZStack {
-            VStack {
+            
                 Image(isOn ? "logoOn" : "logoOff")
                     .resizable()
-                    .padding([.leading, .trailing], 20.0)
-                    .padding(.top, 120.0)
                     .scaledToFit()
-
+//                    .padding([.leading, .trailing], 20.0)
+                    .padding(.bottom, 230.0)
+                    
+            VStack {
+                Spacer()
                 Spacer()
                 if isOn {
-                    Image("titleChar")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.bottom, 100.0)
+                    ZStack{
+                        Image("titleChar")
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.top, 350.0)
+                        Image("StartArrow")
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
+                
+                
             }.animation(.easeInOut(duration: 0.5), value: isOn)
 
             if showOverlay {
