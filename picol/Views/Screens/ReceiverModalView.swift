@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ReceiverModalView: View {
-    @StateObject private var viewModel = PicolViewModel()
+    @StateObject private var viewModel1 = PicolImageViewModel()
+    @StateObject private var viewModel2 = PicolImageViewModel()
+    
     let receivedUser: User
 
     var body: some View {
@@ -47,10 +49,13 @@ struct ReceiverModalView: View {
                             .padding(.top, 200.0)
                         //キャラクター表示
                         VStack{
-                            Image("PicolFire1")
-                                .resizable()
+                            PicolImage()
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
+                                .environmentObject(viewModel1)
+                                .onTapGesture {
+                                    viewModel1.getTypeFromParam(param: "2ffffff")
+                                }
                             Text("ファイアー1")
                                 .foregroundColor(.white)
                                 .font(.title2)
@@ -62,7 +67,10 @@ struct ReceiverModalView: View {
                             PicolImage()
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
-                                .environmentObject(viewModel)
+                                .environmentObject(viewModel2)
+                                .onTapGesture {
+                                    viewModel2.getTypeFromParam(param: "2ffffff")
+                                }
                             Text(receivedUser.character_name)
                                 .foregroundColor(.white)
                                 .font(.title2)

@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var viewModel = MainViewModel()
+    @StateObject private var viewModel = PicolImageViewModel()
     @State private var position: CGPoint = CGPoint(x: 0.5, y: 0.5)
     @State private var mode: String = "wait"
     
@@ -18,6 +18,7 @@ struct MainView: View {
                     .position(x: geometry.size.width * position.x, y: geometry.size.height * position.y) // X:[ 0.2-0.8 ] Y:[ 0.4-0.75 ]
                     .onTapGesture {
                         mode = "walk"
+                        viewModel.getTypeFromParam(param: "2ffffff")
                     }
                     .environmentObject(viewModel) // Pass viewModel as EnvironmentObject
                     .onChange(of: mode) { oldMode, newMode in
