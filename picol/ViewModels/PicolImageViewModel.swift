@@ -7,7 +7,7 @@ class PicolImageViewModel: ObservableObject {
     let typeCodeToTypeDic = ["1": "Fire", "2": "Star", "3": "Moon", "4": "Light", "5": "Bulb", "6": "Sun"]
 
     func getTypeFromParam(param: String) {
-        let typeCode = param.prefix(1)
+        let typeCode = param.count < 1 ? "1" : param.prefix(1)
         self.type = typeCodeToTypeDic[String(typeCode)]!
     }
 
