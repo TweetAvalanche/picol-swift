@@ -38,4 +38,36 @@ class CharacterAPI {
             completion(result)
         }
     }
+    
+    func getAllCharacter(uid: String, completion: @escaping (Result<[User], Error>) -> Void) {
+        var components = URLComponents(string: "https://p2flash.fynsv.net/character/all")!
+        components.queryItems = [URLQueryItem(name: "uid", value: uid)]
+
+        guard let url = components.url else {
+            completion(.failure(NSError(domain: "InvalidURL", code: -1)))
+            return
+        }
+        
+        print("getAllCharacter: \(url)")
+        
+        NetworkManager.shared.get(url: url) { result in
+            completion(result)
+        }
+    }
+    
+    func putDefaultCharacter(cid: String, completion: @escaping (Result<User, Error>) -> Void) {
+        var components = URLComponents(string: "https://p2flash.fynsv.net/character/default")!
+        components.queryItems = [URLQueryItem(name: "cid", value: cid)]
+        
+        guard let url = components.url else {
+            completion(.failure(NSError(domain: "InvalidURL", code: -1)))
+            return
+        }
+        
+        print("putDefaultCharacter: \(url)")
+        
+        NetworkManager.shared.put(url: url) { result in
+            completion(result)
+        }
+    }
 }

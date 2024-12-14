@@ -54,6 +54,15 @@ struct TabNavigationView: View {
                         .onAppear {
                             SoundManager.shared.playBGM(named: "trans_bgm")
                         }
+                    HistoryListView()
+                        .tabItem {
+                            Image(systemName: "list.bullet")
+                            Text("History")
+                        }
+                        .tag(4)
+                        .onAppear {
+                            SoundManager.shared.playBGM(named: "trans_bgm")
+                        }
                 }
                 .disabled(isTabLocked)
                 .onChange(of: selectedTab) { _ in
