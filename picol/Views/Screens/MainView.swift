@@ -8,7 +8,7 @@ import SwiftUI
 struct MainView: View {
     var body: some View {
         VStack {
-            Image("PicolFire")
+            Image("PicolFire1")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200, height: 200)
