@@ -9,6 +9,7 @@ struct MainView: View {
     @StateObject private var viewModel = PicolImageViewModel()
     @State private var position: CGPoint = CGPoint(x: 0.5, y: 0.5)
     @State private var mode: String = "wait"
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
     
     var body: some View {
         GeometryReader { geometry in
@@ -18,7 +19,6 @@ struct MainView: View {
                     .position(x: geometry.size.width * position.x, y: geometry.size.height * position.y) // X:[ 0.2-0.8 ] Y:[ 0.4-0.75 ]
                     .onTapGesture {
                         mode = "walk"
-                        viewModel.getTypeFromParam(param: "2ffffff")
                     }
                     .environmentObject(viewModel) // Pass viewModel as EnvironmentObject
                     .onChange(of: mode) { oldMode, newMode in
@@ -36,6 +36,7 @@ struct MainView: View {
                         }
                     }
                     .onAppear {
+                        viewModel.getTypeFromParam(param: defaultCharacter)
                         Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                             viewModel.face = viewModel.faces.randomElement() ?? ""
                         }

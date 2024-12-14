@@ -4,11 +4,13 @@
 //
 
 import Foundation
+import SwiftUI
 
 class UserViewModel: ObservableObject {
     @Published var currentUser: User?
     @Published var errorMessage: String?
     @Published var isLoading = true
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
     
     private let userAPI = UserAPI()
     private let keychain = KeychainManager.shared
@@ -30,6 +32,7 @@ class UserViewModel: ObservableObject {
                     if !isSet {
                         self.errorMessage = "Failed to save uid"
                     }
+                    self.defaultCharacter = user.character_param
                 case .failure(let error):
                     print("error: \(error)")
                     self.errorMessage = error.localizedDescription
