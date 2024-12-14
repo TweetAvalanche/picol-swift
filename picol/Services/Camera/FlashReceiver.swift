@@ -14,9 +14,10 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     @Published var fps: Double = 0.0
     @Published var processingTime: Double = 0.0
     @Published var lastReceivedData: String = ""
+    @Published var isFinish: Bool = false
     @Published var receivedUserData: User?
     @Published var isFlash: Bool = false
-    
+
     private let tokenViewModel = TokenViewModel()
 
     // セッション関連
@@ -67,6 +68,9 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
                     let exposureDuration = device.activeFormat.minExposureDuration
                     device.setExposureModeCustom(duration: exposureDuration, iso: device.iso, completionHandler: nil)
                 }
+                // フレームレートを30fpsに設定
+                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 30)
+                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 30)
                 device.unlockForConfiguration()
             } catch {
                 self.session.commitConfiguration()
@@ -97,6 +101,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     func startSession() {
         sessionQueue.async {
             if self.session.isRunning { return }
+            self.configureSession()
             self.session.startRunning()
             Task { @MainActor in
                 self.statusText = "読み込み中..."
@@ -216,7 +221,14 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
                     updateLastReceivedData(hexData)
                     tokenViewModel.loadToken(token: hexData) {
                         print("loadToken completion")
-                        self.receivedUserData = self.tokenViewModel.receivedUser
+                        if let user = self.tokenViewModel.receivedUser {
+                            print("token user sucsses")
+                            print(user)
+                            self.receivedUserData = user
+                            self.updateFinish()
+                        } else {
+                            print("loadToken")
+                        }
                     }
                     dataBitBuffer = []
                 }
@@ -287,7 +299,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         print("decode: \(decodedBits)")
         return decodedBits
     }
-    
+
     private func bitToHex(_ bits: [Bool]) -> String {
         let binaryString = bits.map { $0 ? "1" : "0" }.joined()
         guard let decimal = Int(binaryString, radix: 2) else {
@@ -296,7 +308,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         }
         return String(format: "%06X", decimal)
     }
-    
+
     // MARK: - Debug / UI Update
     func updateFPS(_ currentTime: CMTime) {
         if lastFrameTime.isValid {
@@ -332,6 +344,12 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     func updateFlash(_ isBright: Bool) {
         DispatchQueue.main.async {
             self.isFlash = isBright
+        }
+    }
+        
+    func updateFinish() {
+        DispatchQueue.main.async {
+            self.isFinish = true
         }
     }
 }

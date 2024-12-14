@@ -16,9 +16,6 @@
 			membershipExceptions = (
 				Extensions/.keep,
 				Info.plist,
-				Services/.keep,
-				ViewModels/.keep,
-				Views/Components/.keep,
 			);
 			target = 982B9FD42D084FE400A3B3AC /* picol */;
 		};
@@ -277,7 +274,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = picol/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = picol;
-				INFOPLIST_KEY_NSCameraUsageDescription = "カメラ使うよ！";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ぴこるーを撮影するためにカメラが必要です。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -316,7 +313,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = picol/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = picol;
-				INFOPLIST_KEY_NSCameraUsageDescription = "カメラ使うよ！";
+				INFOPLIST_KEY_NSCameraUsageDescription = "ぴこるーを撮影するためにカメラが必要です。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

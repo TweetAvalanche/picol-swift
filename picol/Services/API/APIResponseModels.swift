@@ -11,6 +11,7 @@ struct User: Codable {
     let cid: Int
     let character_name: String
     let character_param: String
+    let character_aura_image: String
 }
 
 struct Token: Codable {
