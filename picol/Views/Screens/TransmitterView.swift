@@ -32,7 +32,7 @@ struct TransmitterView: View {
                         .cornerRadius(10)
                         .padding(.leading, 25.0)
                 })
-                TextField("ユーザー設定メッセージ", text: $inputMessage, axis: .vertical)
+                TextField("ユーザー設定メッセージ", text: $inputMessage)
                     .padding()
                     .background(.white)
                     .frame(width: 250.0, height: 60.0)
