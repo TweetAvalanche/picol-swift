@@ -27,45 +27,20 @@ class NetworkManager {
         }.resume()
     }
     
-    // 基本的なPOSTリクエストメソッド
-    func post<T: Decodable, U: Encodable>(url: URL,
-                                          headers: [String: String]? = nil,
-                                          body: U,
-                                          completion: @escaping (Result<T, Error>) -> Void) {
+    // post
+    func post<T: Decodable>(url: URL,
+                            headers: [String: String]? = nil,
+                            completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        if let headers = headers {
-            for (field, value) in headers {
-                request.setValue(value, forHTTPHeaderField: field)
-            }
-        }
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        do {
-            let requestData = try JSONEncoder().encode(body)
-            request.httpBody = requestData
-        } catch {
-            completion(.failure(error))
-            return
-        }
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            self.handleResponse(data: data, response: response, error: error, completion: completion)
-        }.resume()
-    }
-    
-    func postWithoutBody<T: Decodable>(url: URL,
-                                       headers: [String: String]? = nil,
-                                       completion: @escaping (Result<T, Error>) -> Void) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        // 共通ヘッダー設定
         if let headers = headers {
             for (field, value) in headers {
                 request.setValue(value, forHTTPHeaderField: field)
             }
         }
         
-        // ボディは付与しない
         URLSession.shared.dataTask(with: request) { data, response, error in
             self.handleResponse(data: data, response: response, error: error, completion: completion)
         }.resume()
@@ -135,12 +110,88 @@ class NetworkManager {
         }.resume()
     }
     
+    func postFile<T: Decodable>(url: URL,
+                                headers: [String: String]? = nil,
+                                fileURL: URL,
+                                fieldName: String = "file",
+                                completion: @escaping (Result<T, Error>) -> Void) {
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // boundary の生成
+        let boundary = "Boundary-\(UUID().uuidString)"
+        
+        // ヘッダー設定
+        if let headers = headers {
+            for (field, value) in headers {
+                request.setValue(value, forHTTPHeaderField: field)
+            }
+        }
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // マルチパートボディの生成
+        let httpBody = createMultipartBody(fileURL: fileURL, fieldName: fieldName, boundary: boundary)
+        request.httpBody = httpBody
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            print("リクエスト送信")
+            self.handleResponse(data: data, response: response, error: error, completion: completion)
+        }.resume()
+    }
+
+    private func createMultipartBody(fileURL: URL, fieldName: String, boundary: String) -> Data {
+        var body = Data()
+        
+        // ファイルデータの読み込み
+        guard let fileData = try? Data(contentsOf: fileURL) else {
+            return body
+        }
+        
+        // ファイルのファイル名（最後のパスコンポーネントを利用）
+        let filename = fileURL.lastPathComponent
+        let mimeType = mimeTypeForPathExtension(fileURL.pathExtension)
+        
+        // データの組み立て
+        // フォームデータ開始
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        
+        // Content-Disposition ヘッダ(ここでファイル名・field名を指定)
+        body.append("Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
+        // Content-Type ヘッダ(MIMEタイプを設定)
+        body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+        
+        // ファイルデータ本体
+        body.append(fileData)
+        body.append("\r\n".data(using: .utf8)!)
+        
+        // フォームデータ終了
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        return body
+    }
+
+    private func mimeTypeForPathExtension(_ ext: String) -> String {
+        // 簡易的なMIMEタイプ判定
+        switch ext.lowercased() {
+        case "jpg", "jpeg":
+            return "image/jpeg"
+        case "png":
+            return "image/png"
+        case "gif":
+            return "image/gif"
+        default:
+            return "application/octet-stream"
+        }
+    }
+    
     // レスポンス共通処理
     private func handleResponse<T: Decodable>(data: Data?,
                                               response: URLResponse?,
                                               error: Error?,
                                               completion: @escaping (Result<T, Error>) -> Void) {
         if let error = error {
+            print("Error: \(error)")
             completion(.failure(error))
             return
         }
@@ -152,6 +203,8 @@ class NetworkManager {
         
         guard 200..<300 ~= httpResponse.statusCode else {
             // ステータスコードによるエラーハンドリング
+            if let data = data { print("data:\(data)") }
+            if let response = response { print("response:\(response)") }
             completion(.failure(NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil)))
             return
         }
