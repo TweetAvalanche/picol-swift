@@ -17,6 +17,9 @@ struct picolApp: App {
                 TitleView(onStart: {
                     showMainView = true
                 })
+                .onAppear {
+                    SoundManager.shared.playBGM(named: "title_bgm")
+                }
             }
         }
     }
