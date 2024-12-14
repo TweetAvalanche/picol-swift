@@ -5,6 +5,7 @@ class SoundManager {
     static let shared = SoundManager()
     
     private var bgmPlayer: AVAudioPlayer?
+    private var sePlayer: AVAudioPlayer?
     
     func playBGM(named name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3") else {
@@ -14,6 +15,7 @@ class SoundManager {
         do {
             bgmPlayer = try AVAudioPlayer(contentsOf: url)
             bgmPlayer?.numberOfLoops = -1
+            bgmPlayer?.volume = 0.5
             bgmPlayer?.play()
         } catch {
             print("Error: \(error.localizedDescription)")
@@ -30,8 +32,8 @@ class SoundManager {
         }
         
         do {
-            let sePlayer = try AVAudioPlayer(contentsOf: url)
-            sePlayer.play()
+            sePlayer = try AVAudioPlayer(contentsOf: url)
+            sePlayer?.play()
         } catch {
             print("Error: \(error.localizedDescription)")
         }
