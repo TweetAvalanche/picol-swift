@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct TitleView: View {
+    @StateObject private var permissionsManager = PermissionsManager()
+
     let onStart: () -> Void
 
     @State private var showOverlay = false
@@ -51,6 +53,7 @@ struct TitleView: View {
                 .onEnded { value in
                     if value.translation.height > 100 && isOn {
                         isOn = false
+                        SoundManager.shared.playSE(named: "main_view_se")
                         delay(0.5) {
                             showOverlay = true
                             delay(2) {

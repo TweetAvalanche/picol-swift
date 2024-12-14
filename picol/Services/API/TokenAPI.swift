@@ -15,7 +15,7 @@ class TokenAPI {
             return
         }
         
-        NetworkManager.shared.postWithoutBody(url: url) { result in
+        NetworkManager.shared.post(url: url) { result in
             completeion(result)
         }
     }
