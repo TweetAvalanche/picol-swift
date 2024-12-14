@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct PicolImage: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: PicolImageViewModel
     @State private var isSceneOne = true
     
     var viewface: String {
@@ -48,6 +48,6 @@ struct PicolImage: View {
 
 struct PicolImage_Previews: PreviewProvider {
     static var previews: some View {
-        PicolImage().environmentObject(MainViewModel())
+        PicolImage().environmentObject(PicolImageViewModel())
     }
 }

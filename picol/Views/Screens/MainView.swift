@@ -6,9 +6,10 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var viewModel = MainViewModel()
+    @StateObject private var viewModel = PicolImageViewModel()
     @State private var position: CGPoint = CGPoint(x: 0.5, y: 0.5)
     @State private var mode: String = "wait"
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
     
     var body: some View {
         GeometryReader { geometry in
@@ -35,6 +36,7 @@ struct MainView: View {
                         }
                     }
                     .onAppear {
+                        viewModel.getTypeFromParam(param: defaultCharacter)
                         Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                             viewModel.face = viewModel.faces.randomElement() ?? ""
                         }
