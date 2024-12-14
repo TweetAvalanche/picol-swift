@@ -9,6 +9,7 @@ import UIKit
 class CharacterViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var user: User?
+    var characterList: [User] = []
 
     let characterAPI = CharacterAPI()
     private let keychain = KeychainManager.shared
@@ -70,6 +71,45 @@ class CharacterViewModel: ObservableObject {
                     completion()
                 case .failure(let error):
                     print("rename failure")
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    func getAllCharacter(completion: @escaping () -> Void) {
+        isLoading = true
+        guard let uid = keychain.load(key: "uid") else {
+            print("uid not found")
+            return
+        }
+        
+        characterAPI.getAllCharacter(uid: uid) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let users):
+                    print("get all character success")
+                    print(users)
+                    self.characterList = users
+                case .failure(let error):
+                    print("get all character failure")
+                    print(error)
+                }
+                self.isLoading = false
+                completion()
+            }
+        }
+    }
+    
+    func putDefaultCharacter(cid: String, completion: @escaping () -> Void) {
+        characterAPI.putDefaultCharacter(cid: cid) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let user):
+                    print("put default character success")
+                    print(user)
+                case .failure(let error):
+                    print("put default character failure")
                     print(error)
                 }
             }
