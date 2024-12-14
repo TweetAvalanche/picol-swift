@@ -14,6 +14,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     @Published var fps: Double = 0.0
     @Published var processingTime: Double = 0.0
     @Published var lastReceivedData: String = ""
+    @Published var isFinish: Bool = false
     @Published var receivedUserData: User?
     @Published var isFlash: Bool = false
     
@@ -216,7 +217,14 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
                     updateLastReceivedData(hexData)
                     tokenViewModel.loadToken(token: hexData) {
                         print("loadToken completion")
-                        self.receivedUserData = self.tokenViewModel.receivedUser
+                        if let user = self.tokenViewModel.receivedUser {
+                            print("token user sucsses")
+                            print(user)
+                            self.receivedUserData = user
+                            self.updateFinish()
+                        } else {
+                            print("loadToken")
+                        }
                     }
                     dataBitBuffer = []
                 }
@@ -332,6 +340,12 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     func updateFlash(_ isBright: Bool) {
         DispatchQueue.main.async {
             self.isFlash = isBright
+        }
+    }
+        
+    func updateFinish() {
+        DispatchQueue.main.async {
+            self.isFinish = true
         }
     }
 }

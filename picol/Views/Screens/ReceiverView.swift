@@ -32,12 +32,6 @@ struct ReceiverView: View {
                 Spacer()
             }
             .backgroundImage("MultiBackground")
-            .onAppear {
-                flashReceiver.startSession()
-            }
-            .onDisappear {
-                flashReceiver.stopSession()
-            }
             
             if flashReceiver.isFlash {
                 VStack{
@@ -52,7 +46,17 @@ struct ReceiverView: View {
                 }
             }
                 
-                
+        }
+        .onAppear {
+            flashReceiver.startSession()
+        }
+        .onDisappear {
+            flashReceiver.stopSession()
+        }
+        .sheet(isPresented: $flashReceiver.isFinish) {
+            if let receivedUser = flashReceiver.receivedUserData {
+                ReceiverModalView(receivedUser: receivedUser)
+            }
         }
     }
 }

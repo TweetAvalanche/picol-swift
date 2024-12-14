@@ -57,10 +57,13 @@ class UserViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let user):
+                    print("user: \(user)")
                     self.currentUser = user
-                    
                 case .failure(let error):
+                    print("error: User not found")
+                    self.keychain.delete(key: "uid")
                     self.errorMessage = error.localizedDescription
+                    completion()
                 }
             }
         }
