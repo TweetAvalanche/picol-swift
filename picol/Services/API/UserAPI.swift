@@ -5,8 +5,6 @@
 
 import Foundation
 
-
-
 class UserAPI {
     func createUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let url = URL(string: "https://p2flash.fynsv.net/user") else {
@@ -14,7 +12,7 @@ class UserAPI {
             return
         }
 
-        NetworkManager.shared.postWithoutBody(url: url) { result in
+        NetworkManager.shared.post(url: url) { result in
             completion(result)
         }
     }

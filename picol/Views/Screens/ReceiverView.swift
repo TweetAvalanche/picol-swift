@@ -6,9 +6,8 @@
 import SwiftUI
 
 struct ReceiverView: View {
-    @ObservedObject var flashReceiver = FlashReceiver()
-    @State private var CameraMessage = ""
-    
+    @StateObject var flashReceiver = FlashReceiver()
+
     var body: some View {
         ZStack{
             VStack {

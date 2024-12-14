@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct TitleView: View {
+    @StateObject private var permissionsManager = PermissionsManager()
+
     let onStart: () -> Void
 
     @State private var showOverlay = false
