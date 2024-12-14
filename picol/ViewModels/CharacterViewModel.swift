@@ -13,7 +13,7 @@ class CharacterViewModel: ObservableObject {
     let characterAPI = CharacterAPI()
     private let keychain = KeychainManager.shared
 
-    func uploadImage(image: UIImage, completion: @escaping (String?) -> Void) {
+    func uploadImage(image: UIImage, completion: @escaping (User?) -> Void) {
         print("uploadImage")
         
         isLoading = true
@@ -55,17 +55,19 @@ class CharacterViewModel: ObservableObject {
                     print(error)
                 }
                 self.isLoading = false
+                completion(self.user)
             }
         }
     }
     
-    func characterRename(cid: String, characterName: String, completion: @escaping () -> Void) {
-        characterAPI.putCharacterRename(cid: cid, name: characterName) { result in
+    func characterRename(cid: String, characterName: String, isDefault: Bool = false, completion: @escaping () -> Void) {
+        characterAPI.putCharacterRename(cid: cid, name: characterName, isDefault: isDefault) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let user):
                     print("rename success")
                     print(user)
+                    completion()
                 case .failure(let error):
                     print("rename failure")
                     print(error)

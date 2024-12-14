@@ -7,6 +7,9 @@ import SwiftUI
 
 struct ReceiverView: View {
     @StateObject var flashReceiver = FlashReceiver()
+    @StateObject private var viewModel = PicolImageViewModel()
+    
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
 
     var body: some View {
         ZStack{
@@ -22,7 +25,7 @@ struct ReceiverView: View {
                         .foregroundColor(Color.white)
                 }
                 Spacer()
-                Image("PicolFireBack1")
+                Image("Picol\(viewModel.type)Back1")
                     .resizable()
                 //                .padding(.bottom, 100.0)
                     .scaledToFit()
@@ -48,6 +51,7 @@ struct ReceiverView: View {
         }
         .onAppear {
             flashReceiver.startSession()
+            viewModel.getTypeFromParam(param: defaultCharacter)
         }
         .onDisappear {
             flashReceiver.stopSession()

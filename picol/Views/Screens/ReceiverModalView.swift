@@ -10,6 +10,8 @@ import SwiftUI
 struct ReceiverModalView: View {
     @StateObject private var viewModel1 = PicolImageViewModel()
     @StateObject private var viewModel2 = PicolImageViewModel()
+    
+    @AppStorage("defaultCharacter") var defaultCharacter = "2000000"
 
     let receivedUser: User
 
@@ -31,7 +33,7 @@ struct ReceiverModalView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 280, height: 280)
-                        Text("Helloooooooo\nHello!\nHello!\nHello!")
+                        Text(receivedUser.user_message)
                             .font(.system(size: 35))
                             .foregroundColor(.black)
                             .font(.title2)
@@ -53,10 +55,7 @@ struct ReceiverModalView: View {
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
                                 .environmentObject(viewModel1)
-                                .onTapGesture {
-                                    viewModel1.getTypeFromParam(param: "2ffffff")
-                                }
-                            Text("ファイアー1")
+                            Text("自分")
                                 .foregroundColor(.white)
                                 .font(.title2)
                                 .padding(.all, 3.0)
@@ -68,9 +67,6 @@ struct ReceiverModalView: View {
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
                                 .environmentObject(viewModel2)
-                                .onTapGesture {
-                                    viewModel2.getTypeFromParam(param: "2ffffff")
-                                }
                             Text(receivedUser.character_name)
                                 .foregroundColor(.white)
                                 .font(.title2)
@@ -81,6 +77,10 @@ struct ReceiverModalView: View {
                     }
                 }
                 Spacer()
+            }
+            .onAppear {
+                viewModel1.getTypeFromParam(param: defaultCharacter)
+                viewModel2.getTypeFromParam(param: receivedUser.character_param)
             }
 
         }

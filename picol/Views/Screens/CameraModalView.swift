@@ -9,9 +9,12 @@ struct CameraModalView: View {
     @Environment(\.dismiss) private var dismiss
 
     @ObservedObject var cameraService: CameraService
+    @StateObject private var viewModel = PicolImageViewModel()
     @StateObject var characterViewModel = CharacterViewModel()
     @State private var name = ""
     @State private var favorite = false
+    
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
     
     var body: some View {
         if let capturedImage = cameraService.capturedImage {
@@ -29,8 +32,8 @@ struct CameraModalView: View {
                             .font(.title)
                             .foregroundColor(.white)
                             .padding()
-                        Image("PicolFire")
-                            .resizable()
+                        PicolImage()
+                            .environmentObject(viewModel)
                             .scaledToFit()
                             .frame(width: 200, height: 200)
                             .onTapGesture {
@@ -58,8 +61,13 @@ struct CameraModalView: View {
                                     return
                                 }
                                 
-                                characterViewModel.characterRename(cid: String(user.cid), characterName: name) {
+                                characterViewModel.characterRename(cid: String(user.cid), characterName: name, isDefault: favorite) {
                                     print("Character renamed")
+                                    if favorite {
+                                        print("defaultCharacter = \(defaultCharacter)↓")
+                                        defaultCharacter = user.character_param
+                                        print("defaultCharacter = \(defaultCharacter)↓")
+                                    }
                                     dismiss()
                                 }
                             }) {
@@ -81,8 +89,8 @@ struct CameraModalView: View {
             }.onAppear {
                 characterViewModel.uploadImage(image: capturedImage) { result in
                     print("Image uploaded")
-                    if let str = result {
-                        print(str)
+                    if let user = result {
+                        viewModel.getTypeFromParam(param: user.character_param)
                     }
                 }
             }

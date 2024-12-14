@@ -11,6 +11,7 @@ class UserViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var isLoading = true
     @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
+    @AppStorage("userMessage") var userMessage = "こんにちは！"
     
     private let userAPI = UserAPI()
     private let keychain = KeychainManager.shared
@@ -33,6 +34,7 @@ class UserViewModel: ObservableObject {
                         self.errorMessage = "Failed to save uid"
                     }
                     self.defaultCharacter = user.character_param
+                    self.userMessage = user.user_message
                 case .failure(let error):
                     print("error: \(error)")
                     self.errorMessage = error.localizedDescription
@@ -69,6 +71,19 @@ class UserViewModel: ObservableObject {
                     completion()
                 }
             }
+        }
+    }
+    
+    func updateUserMessage(message: String, completion: @escaping () -> Void) {
+        print("updateUserMessage")
+        guard let uid = keychain.load(key: "uid") else {
+            print("uid not found")
+            completion()
+            return
+        }
+        
+        userAPI.putUserMessage(uid: uid, message: message) { _ in
+            completion()
         }
     }
 }

@@ -30,4 +30,18 @@ class UserAPI {
             completion(result)
         }
     }
+    
+    func putUserMessage(uid: String, message: String, completion: @escaping (Result<User, Error>) -> Void) {
+        var components = URLComponents(string: "https://p2flash.fynsv.net/user/message")!
+        components.queryItems = [URLQueryItem(name: "uid", value: uid), URLQueryItem(name: "message", value: message)]
+
+        guard let url = components.url else {
+            completion(.failure(NSError(domain: "InvalidURL", code: -1)))
+            return
+        }
+
+        NetworkManager.shared.put(url: url) { result in
+            completion(result)
+        }
+    }
 }
