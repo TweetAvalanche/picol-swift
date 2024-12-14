@@ -9,31 +9,51 @@ struct TransmitterView: View {
     @ObservedObject var flashTransmitter = FlashTransmitter()
     @StateObject var tokenViewModel = TokenViewModel()
     
-    @State private var inputName = ""
+    //ユーザー設定メッセージ
+    @State private var inputMessage = ""
+    @FocusState var isFocused: Bool
     
     var body: some View {
         VStack {
-//            Text("送信画面")
-//                .font(.title)
-//                .padding()
+            Text("メッセージを送信")
+                .font(.title)
+                .foregroundColor(Color.white)
+                .padding(.top, 40.0)
             HStack{
-                TextField("ユーザー設定メッセージ", text: $inputName)
-                    .background(.white)
-                    .font(.system(size: 30))
-                    .cornerRadius(10)
-                    .padding(.top, 40.0)
-                    .padding(.leading, 25.0)
                 Button(action: {
+                    inputMessage = ""
+                }, label: {
+                    Image(systemName: "trash.fill")
+                        .font(.system(size: 24))
+//                        .padding()
+//                        .backgroundColor("bgButton")
+                        .foregroundColor(.white)
+                        .frame(width: 30.0, height: 30.0)
+                        .cornerRadius(10)
+                        .padding(.leading, 25.0)
+                })
+                TextField("ユーザー設定メッセージ", text: $inputMessage)
+                    .padding()
+                    .background(.white)
+                    .frame(width: 250.0, height: 60.0)
+                    .font(.system(size: 25))
+                    .cornerRadius(10)
+                    
+                    .focused($isFocused)
+                Button(action: {
+                    //送信ボタンをタップと同時にサーバーにメッセージを送る
+                    isFocused = false
                     let encodedData = flashTransmitter.makeHexSendData(hex: tokenViewModel.transmitterToken!)
                     flashTransmitter.send(data: encodedData)
                 }, label: {
-                    if tokenViewModel.isTransmitterToken == false {
-                        Text("送信")
-                            .font(.title)
+                    if tokenViewModel.isTransmitterToken{
+                        //送信
+                        Image(systemName: "paperplane.fill")
+                            .font(.system(size: 24))
                             .padding()
                             .backgroundColor("bgButton")
                             .foregroundColor(.white)
-                            .frame(width: 100.0, height: 60.0)
+                            .frame(width: 60.0, height: 60.0)
                             .cornerRadius(10)
                             .padding(.trailing, 25.0)
                     } else {
@@ -41,11 +61,11 @@ struct TransmitterView: View {
                             .progressViewStyle(CircularProgressViewStyle(tint: .white))
                             .foregroundColor(.white)
                     }
-                }).disabled(tokenViewModel.isTransmitterToken)
-                    .padding(.top, 40.0)
+                }).disabled(!tokenViewModel.isTransmitterToken)
             }
+//            .padding(.top, 10.0)
             Spacer()
-            Image("PicolFire1")
+            Image("PicolFireBack1")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 250, height: 250)
