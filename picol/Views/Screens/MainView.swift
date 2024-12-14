@@ -6,16 +6,20 @@
 import SwiftUI
 
 struct MainView: View {
-    var type: String = "Fire"
-    var mode: String = "Flash"
+    @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
         VStack {
-            PicolImage(type: type, mode: mode)
+            PicolImage()
                 .frame(width: 300, height: 300)
                 .onTapGesture {
-                    print("Picol\(type)\(mode) tapped")
+                    if viewModel.face == "Sad" {
+                        viewModel.face = "Flash"
+                        return
+                    }
+                    viewModel.face = "Sad" // Change mode state
                 }
+                .environmentObject(viewModel) // Pass viewModel as EnvironmentObject
         }
         .backgroundImage("MainBackground")
     }
