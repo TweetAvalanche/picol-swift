@@ -55,6 +55,13 @@ class CameraService: NSObject, ObservableObject {
             }
 
             do {
+                // 露出モードを自動に設定
+                try device.lockForConfiguration()
+                if device.isExposureModeSupported(.continuousAutoExposure) {
+                    device.exposureMode = .continuousAutoExposure
+                }
+                device.unlockForConfiguration()
+
                 let deviceInput = try AVCaptureDeviceInput(device: device)
                 if self.session.canAddInput(deviceInput) {
                     self.session.addInput(deviceInput)

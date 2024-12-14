@@ -96,6 +96,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     func startSession() {
         sessionQueue.async {
             if self.session.isRunning { return }
+            self.configureSession()
             self.session.startRunning()
             Task { @MainActor in
                 self.statusText = "読み込み中..."
