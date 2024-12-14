@@ -7,6 +7,8 @@ import SwiftUI
 
 struct TabNavigationView: View {
     @StateObject var userViewModel = UserViewModel()
+    @State private var selectedTab: Int = 0
+    @State private var isTabLocked: Bool = false
 
     var body: some View {
         ZStack {
@@ -15,28 +17,41 @@ struct TabNavigationView: View {
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     .backgroundColor("bgTitleColorOff")
             } else {
-                TabView {
+                TabView(selection: $selectedTab) {
                     MainView()
                         .tabItem {
                             Image(systemName: "house")
                             Text("Home")
                         }
+                        .tag(0)
                     CameraView()
                         .tabItem {
                             Image(systemName: "camera")
                             Text("Camera")
                         }
+                        .tag(1)
                     ReceiverView()
                         .tabItem {
                             Image(systemName: "antenna.radiowaves.left.and.right")
                             Text("Receive")
                         }
+                        .tag(2)
                     TransmitterView()
                         .tabItem {
                             Image(systemName: "paperplane")
                             Text("Send")
                         }
-                            
+                        .tag(3)
+                }
+                .disabled(isTabLocked)
+                .onChange(of: selectedTab) { _ in
+                    isTabLocked = true
+                    print("Tab locked")
+                    // 5秒後にアンロック
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        print("Tab unlocked")
+                        isTabLocked = false
+                    }
                 }
             }
         }
