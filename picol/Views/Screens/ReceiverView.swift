@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct ReceiverView: View {
-    @ObservedObject var flashReceiver = FlashReceiver()
+    @StateObject var flashReceiver = FlashReceiver()
 
     var body: some View {
         VStack {
