@@ -12,6 +12,10 @@ struct CameraView: View {
     var body: some View {
         ZStack {
             VStack{
+                Text("ぴこるーを探す")
+                    .font(.title)
+                    .foregroundColor(Color.white)
+                    .padding(.top, 20.0)
                 Spacer()
                 GeometryReader { geometry in
                     CameraPreview(session: cameraService.getSession())
