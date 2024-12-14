@@ -47,10 +47,9 @@ class NetworkManager {
     }
     
     // 基本的なPUTリクエストメソッド
-    func put<T: Decodable, U: Encodable>(url: URL,
-                                         headers: [String: String]? = nil,
-                                         body: U,
-                                         completion: @escaping (Result<T, Error>) -> Void) {
+    func put<T: Decodable>(url: URL,
+                           headers: [String: String]? = nil,
+                           completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         if let headers = headers {
@@ -59,20 +58,12 @@ class NetworkManager {
             }
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        do {
-            let requestData = try JSONEncoder().encode(body)
-            request.httpBody = requestData
-        } catch {
-            completion(.failure(error))
-            return
-        }
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             self.handleResponse(data: data, response: response, error: error, completion: completion)
         }.resume()
     }
-    
+
     // マルチパートで画像をアップロードする処理（実際のリクエスト送信部分のみ）
     func uploadImage(url: URL,
                      image: UIImage,

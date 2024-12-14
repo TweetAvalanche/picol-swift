@@ -1,13 +1,14 @@
 //
-//  ImageViewModel.swift
+//  CharacterViewModel.swift
 //  picol
 //
 
 import Foundation
 import UIKit
 
-class ImageViewModel: ObservableObject {
+class CharacterViewModel: ObservableObject {
     @Published var isLoading = false
+    @Published var user: User?
 
     let characterAPI = CharacterAPI()
     private let keychain = KeychainManager.shared
@@ -47,12 +48,28 @@ class ImageViewModel: ObservableObject {
                 switch result {
                 case .success(let user):
                     print("upload image success")
+                    self.user = user
                     print(user)
                 case .failure(let error):
                     print("upload image failure")
                     print(error)
                 }
                 self.isLoading = false
+            }
+        }
+    }
+    
+    func characterRename(cid: String, characterName: String, completion: @escaping (String?) -> Void) {
+        characterAPI.putCharacterRename(cid: cid, name: characterName) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let user):
+                    print("rename success")
+                    print(user)
+                case .failure(let error):
+                    print("rename failure")
+                    print(error)
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ import SwiftUI
 
 struct CameraModalView: View {
     @ObservedObject var cameraService: CameraService
-    @StateObject var imageViewModel = ImageViewModel()
+    @StateObject var characterViewModel = CharacterViewModel()
     @State private var name = ""
     @State private var favorite = false
     
@@ -18,12 +18,12 @@ struct CameraModalView: View {
                     .resizable()
                     .scaledToFit()
                     .padding()
-                if imageViewModel.isLoading {
+                if characterViewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                } else {
+                } else if let user = characterViewModel.user {
                     VStack {
-                        Text("ぴこるーを発見!")
+                        Text("新しいぴこるーを発見!")
                             .font(.title)
                             .foregroundColor(.white)
                             .padding()
@@ -45,18 +45,26 @@ struct CameraModalView: View {
                                     .foregroundColor(.yellow)
                                     .font(.title)
                                 Text("お気に入り")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                             }
+                            .frame(width: 150, height: 50)
+                            .background(Color.white)
+                            .cornerRadius(10)
                             
                             Button(action: {
-                                print("登録")
+                                if name.isEmpty {
+                                    return
+                                }
+                                
+                                char
                             }) {
                                 Image(systemName: "checkmark")
                                     .foregroundColor(.white)
                                     .font(.title)
                                 Text("登録")
+                                    .foregroundColor(.white)
                             }
-                            .padding()
+                            .frame(width: 100, height: 50)
                             .background(Color.blue)
                             .cornerRadius(10)
                             
@@ -66,7 +74,7 @@ struct CameraModalView: View {
                     .backgroundColor("bgBlack0.5")
                 }
             }.onAppear {
-                imageViewModel.uploadImage(image: capturedImage) { result in
+                characterViewModel.uploadImage(image: capturedImage) { result in
                     print("Image uploaded")
                     if let str = result {
                         print(str)
