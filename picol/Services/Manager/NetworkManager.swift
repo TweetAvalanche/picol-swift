@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import UIKit
 
 class NetworkManager {
     static let shared = NetworkManager()
@@ -94,6 +95,43 @@ class NetworkManager {
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             self.handleResponse(data: data, response: response, error: error, completion: completion)
+        }.resume()
+    }
+    
+    // マルチパートで画像をアップロードする処理（実際のリクエスト送信部分のみ）
+    func uploadImage(url: URL,
+                     image: UIImage,
+                     headers: [String: String]? = nil,
+                     completion: @escaping (Result<String, Error>) -> Void) {
+        // ここではMultipartRequestBuilderに任せてRequestを作成
+        guard let request = MultipartRequestBuilder.makeMultipartRequest(url: url, image: image, headers: headers) else {
+            completion(.failure(NSError(domain: "RequestCreationError", code: -1, userInfo: nil)))
+            return
+        }
+        
+        // あとはリクエストを飛ばしてレスポンスをハンドリングする
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NSError(domain: "InvalidResponse", code: -1, userInfo: nil)))
+                return
+            }
+            
+            guard 200..<300 ~= httpResponse.statusCode else {
+                completion(.failure(NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil)))
+                return
+            }
+            
+            guard let data = data, let responseString = String(data: data, encoding: .utf8) else {
+                completion(.failure(NSError(domain: "NoData", code: -1, userInfo: nil)))
+                return
+            }
+            
+            completion(.success(responseString))
         }.resume()
     }
     

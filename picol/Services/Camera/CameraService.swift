@@ -10,16 +10,16 @@ class CameraService: NSObject, ObservableObject {
     @Published var isAuthorized = false
     @Published var capturedImage: UIImage?
     @Published var isSessionRunning = false
-    
+
     private let session = AVCaptureSession()
     private let sessionQueue = DispatchQueue(label: "camera.session.queue")
     private let photoOutput = AVCapturePhotoOutput()
     private var videoDeviceInput: AVCaptureDeviceInput?
-    
+
     override init() {
         super.init()
     }
-    
+
     // MARK: - Permissions
     func requestAuthorization() async {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -38,33 +38,33 @@ class CameraService: NSObject, ObservableObject {
             }
         }
     }
-    
+
     // MARK: - Session Control
     func getSession() -> AVCaptureSession {
         return session
     }
-    
+
     func configureSession() {
         sessionQueue.async {
             self.session.beginConfiguration()
             self.session.sessionPreset = .photo
-            
+
             guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
                 self.session.commitConfiguration()
                 return
             }
-            
+
             do {
                 let deviceInput = try AVCaptureDeviceInput(device: device)
                 if self.session.canAddInput(deviceInput) {
                     self.session.addInput(deviceInput)
                     self.videoDeviceInput = deviceInput
                 }
-                
+
                 if self.session.canAddOutput(self.photoOutput) {
                     self.session.addOutput(self.photoOutput)
                 }
-                
+
                 self.session.commitConfiguration()
             } catch {
                 print("Failed to configure camera: \(error)")
@@ -72,7 +72,7 @@ class CameraService: NSObject, ObservableObject {
             }
         }
     }
-    
+
     func startSession() {
         sessionQueue.async {
             if self.session.isRunning { return }
@@ -82,7 +82,7 @@ class CameraService: NSObject, ObservableObject {
             }
         }
     }
-    
+
     func stopSession() {
         sessionQueue.async {
             if !self.session.isRunning { return }
@@ -92,7 +92,7 @@ class CameraService: NSObject, ObservableObject {
             }
         }
     }
-    
+
     // MARK: - Photo Capture
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
@@ -109,16 +109,32 @@ extension CameraService: AVCapturePhotoCaptureDelegate {
             print("Error capturing photo: \(error)")
             return
         }
-        
+
         guard let data = photo.fileDataRepresentation(),
               let image = UIImage(data: data) else {
             print("No photo data or unable to create UIImage")
             return
         }
-        
+
+        // 画像を3:2のアスペクト比にクロップ
+        let originalSize = image.size
+        let targetAspectRatio: CGFloat = 3.0 / 2.0
+        let newWidth = originalSize.height * targetAspectRatio
+        let cropRect = CGRect(
+            x: (originalSize.width - newWidth) / 2.0,
+            y: 0,
+            width: newWidth,
+            height: originalSize.height
+        )
+        guard let cgImage = image.cgImage?.cropping(to: cropRect) else {
+            print("Failed to crop image")
+            return
+        }
+        let croppedImage = UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
+
         // メインスレッドでUI更新
         Task { @MainActor in
-            self.capturedImage = image
+            self.capturedImage = croppedImage
         }
     }
 }

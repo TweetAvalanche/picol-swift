@@ -8,8 +8,11 @@ import Foundation
 struct User: Codable {
     let uid: Int
     let user_message: String
-    let cid: String
+    let cid: Int
+    // 返ってくるキャラクターはデフォルトのもの。キャラ未所持の場合はcid:0, それ以外:""
     let character_name: String
+    let character_param: String
+    let character_aura_image: String
 }
 
 class UserAPI {
