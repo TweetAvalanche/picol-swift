@@ -6,6 +6,10 @@ class PicolImageViewModel: ObservableObject {
     let faces = ["Fine", "Flash", "Sad", "", "Heart", "Angry"]
     let typeCodeToTypeDic = ["1": "Fire", "2": "Star", "3": "Moon", "4": "Light", "5": "Bulb", "6": "Sun"]
 
+    init() {
+        self.face = faces.randomElement() ?? "Angry"
+    }
+
     func getTypeFromParam(param: String) {
         let typeCode = param.count < 1 ? "1" : param.prefix(1)
         self.type = typeCodeToTypeDic[String(typeCode)]!
