@@ -24,24 +24,36 @@ struct TabNavigationView: View {
                             Text("Home")
                         }
                         .tag(0)
+                        .onAppear {
+                            SoundManager.shared.playBGM(named: "home_bgm")
+                        }
                     CameraView()
                         .tabItem {
                             Image(systemName: "camera")
                             Text("Camera")
                         }
                         .tag(1)
+                        .onAppear {
+                            SoundManager.shared.playBGM(named: "trans_bgm")
+                        }
                     ReceiverView()
                         .tabItem {
                             Image(systemName: "antenna.radiowaves.left.and.right")
                             Text("Receive")
                         }
                         .tag(2)
+                        .onAppear {
+                            SoundManager.shared.playBGM(named: "trans_bgm")
+                        }
                     TransmitterView()
                         .tabItem {
                             Image(systemName: "paperplane")
                             Text("Send")
                         }
                         .tag(3)
+                        .onAppear {
+                            SoundManager.shared.playBGM(named: "trans_bgm")
+                        }
                 }
                 .disabled(isTabLocked)
                 .onChange(of: selectedTab) { _ in
