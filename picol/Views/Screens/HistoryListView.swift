@@ -28,12 +28,16 @@ struct HistoryListView: View {
                             Rectangle()
                                 .background(.gray)
                                 .frame(width: 3, height: 80)
-                            VStack{
+                            
+                            ZStack{
                                 Text("キャラクタ名")
-                                    .font(.system(size: 24))
-                                Text("発見日")
-                                    .font(.system(size: 12))
-                                Text("0000.00.00")
+                                    .font(.system(size: 25))
+                                    .multilineTextAlignment(.leading)
+                                Rectangle()
+                                    .frame(width: 130, height: 8)
+                                    .foregroundColor(.red)
+                                //写真の色を表示
+                                    .padding(.top, 50.0)
                             }
                         }
                         Spacer()
