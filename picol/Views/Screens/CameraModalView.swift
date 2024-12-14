@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct CameraModalView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @ObservedObject var cameraService: CameraService
     @StateObject var characterViewModel = CharacterViewModel()
     @State private var name = ""
@@ -56,7 +58,10 @@ struct CameraModalView: View {
                                     return
                                 }
                                 
-                                char
+                                characterViewModel.characterRename(cid: String(user.cid), characterName: name) {
+                                    print("Character renamed")
+                                    dismiss()
+                                }
                             }) {
                                 Image(systemName: "checkmark")
                                     .foregroundColor(.white)

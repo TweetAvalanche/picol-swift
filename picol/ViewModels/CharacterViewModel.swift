@@ -53,13 +53,14 @@ class CharacterViewModel: ObservableObject {
                 case .failure(let error):
                     print("upload image failure")
                     print(error)
+                    self.user = User(uid: 1, user_message: "hoge", cid: 2, character_name: "hoge", character_param: "", character_aura_image: "")
                 }
                 self.isLoading = false
             }
         }
     }
     
-    func characterRename(cid: String, characterName: String, completion: @escaping (String?) -> Void) {
+    func characterRename(cid: String, characterName: String, completion: @escaping () -> Void) {
         characterAPI.putCharacterRename(cid: cid, name: characterName) { result in
             DispatchQueue.main.async {
                 switch result {
