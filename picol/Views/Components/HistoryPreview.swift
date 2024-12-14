@@ -49,6 +49,7 @@ struct HistoryPreview: View {
                             .font(.system(size: 40))
                             .foregroundColor(.bgButton)
                             .onTapGesture {
+                                print("star tapped")
                                 characterViewModel.putDefaultCharacter(cid: String(user.cid)) {
                                     defaultCharacter = user.character_param
                                 }
