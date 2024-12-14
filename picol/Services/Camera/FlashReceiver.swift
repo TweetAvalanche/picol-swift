@@ -15,6 +15,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     @Published var processingTime: Double = 0.0
     @Published var lastReceivedData: String = ""
     @Published var receivedUserData: User?
+    @Published var isFlash: Bool = false
 
     private let tokenViewModel = TokenViewModel()
 
@@ -175,6 +176,7 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
         }
 
         let isBright = luminance > luminanceThreshold
+        updateFlash(isBright)
         updateStatusText(isReceivingData ? "受信中..." : "スタートパターン検知前")
 
         if !isReceivingData {
@@ -328,6 +330,12 @@ class FlashReceiver: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleB
     func updateLastReceivedData(_ hexData: String) {
         DispatchQueue.main.async {
             self.lastReceivedData = hexData
+        }
+    }
+    
+    func updateFlash(_ isBright: Bool) {
+        DispatchQueue.main.async {
+            self.isFlash = isBright
         }
     }
 }
