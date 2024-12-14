@@ -44,7 +44,8 @@ struct ReceiverView: View {
 //            Text("最大輝度: \(flashReceiver.getLuminance())")
 //                .monospaced()
 //            Spacer()
-            
+            Text(flashReceiver.isFlash ? "光" : "無")
+                .foregroundColor(.white)
             VStack{
                 Text("メッセージを受信")
                     .font(.title)
