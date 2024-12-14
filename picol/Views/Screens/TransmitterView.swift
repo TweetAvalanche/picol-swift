@@ -8,10 +8,15 @@ import SwiftUI
 struct TransmitterView: View {
     @ObservedObject var flashTransmitter = FlashTransmitter()
     @StateObject var tokenViewModel = TokenViewModel()
+    @StateObject private var viewModel = PicolImageViewModel()
+    @StateObject var userViewModel = UserViewModel()
     
     //ユーザー設定メッセージ
     @State private var inputMessage = ""
     @FocusState var isFocused: Bool
+    
+    @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
+    @AppStorage("userMessage") var userMessage = "こんにちは"
     
     var body: some View {
         VStack {
@@ -32,7 +37,7 @@ struct TransmitterView: View {
                         .cornerRadius(10)
                         .padding(.leading, 25.0)
                 })
-                TextField("ユーザー設定メッセージ", text: $inputMessage)
+                TextField("ユーザー設定メッセージ", text: $userMessage)
                     .padding()
                     .background(.white)
                     .frame(width: 250.0, height: 60.0)
@@ -41,10 +46,11 @@ struct TransmitterView: View {
                     
                     .focused($isFocused)
                 Button(action: {
-                    //送信ボタンをタップと同時にサーバーにメッセージを送る
                     isFocused = false
-                    let encodedData = flashTransmitter.makeHexSendData(hex: tokenViewModel.transmitterToken!)
-                    flashTransmitter.send(data: encodedData)
+                    userViewModel.updateUserMessage(message: userMessage) {
+                        let encodedData = flashTransmitter.makeHexSendData(hex: tokenViewModel.transmitterToken!)
+                        flashTransmitter.send(data: encodedData)
+                    }
                 }, label: {
                     if tokenViewModel.isTransmitterToken{
                         //送信
@@ -65,7 +71,7 @@ struct TransmitterView: View {
             }
 //            .padding(.top, 10.0)
             Spacer()
-            Image("PicolFireBack1")
+            Image("Picol\(viewModel.type)Back1")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 250, height: 250)
@@ -78,6 +84,7 @@ struct TransmitterView: View {
         .backgroundImage("MultiBackground")
         .onAppear {
             tokenViewModel.createToken()
+            viewModel.getTypeFromParam(param: defaultCharacter)
         }
     }
 }

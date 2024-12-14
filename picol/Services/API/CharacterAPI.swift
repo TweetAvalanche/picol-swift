@@ -23,9 +23,9 @@ class CharacterAPI {
         }
     }
     
-    func putCharacterRename(cid: String, name: String, completion: @escaping (Result<User, Error>) -> Void) {
+    func putCharacterRename(cid: String, name: String, isDefault: Bool, completion: @escaping (Result<User, Error>) -> Void) {
         var components = URLComponents(string: "https://p2flash.fynsv.net/character/rename")!
-        components.queryItems = [URLQueryItem(name: "cid", value: cid), URLQueryItem(name: "character_name", value: name)]
+        components.queryItems = [URLQueryItem(name: "cid", value: cid), URLQueryItem(name: "character_name", value: name), URLQueryItem(name: "make_default=1", value: isDefault ? "1" : "0")]
 
         guard let url = components.url else {
             completion(.failure(NSError(domain: "InvalidURL", code: -1)))
