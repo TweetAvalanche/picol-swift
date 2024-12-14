@@ -24,12 +24,14 @@ class UserViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let user):
+                    print("user: \(user)")
                     self.currentUser = user
                     let isSet = self.keychain.save(key: "uid", value: String(user.uid))
                     if !isSet {
                         self.errorMessage = "Failed to save uid"
                     }
                 case .failure(let error):
+                    print("error: \(error)")
                     self.errorMessage = error.localizedDescription
                 }
             }
