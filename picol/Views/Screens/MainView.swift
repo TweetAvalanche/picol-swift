@@ -10,6 +10,10 @@ struct MainView: View {
     @State private var position: CGPoint = CGPoint(x: 0.5, y: 0.5)
     @State private var mode: String = "wait"
     @AppStorage("defaultCharacter") var defaultCharacter = "2ffffff"
+    @State private var characterCount: Int = 0
+
+    private let characterAPI = CharacterAPI()
+    private let keychain = KeychainManager.shared
     
     var body: some View {
         GeometryReader { geometry in
@@ -45,7 +49,22 @@ struct MainView: View {
                                 mode = "walk"
                             }
                         }
+
+                        guard let uid = keychain.load(key: "uid") else {
+                            print("uid not found")
+                            return
+                        }
+                        characterAPI.countCharacters(uid: uid) { result in
+                            switch result {
+                            case .success(let count):
+                                characterCount = count
+                            case .failure(let error):
+                                print("countCharacters error: \(error)")
+                            }
+                        }
                     }
+                Text("キャラクター数: \(characterCount)")
+                    .position(x: geometry.size.width * 0.5, y: geometry.size.height * 0.9)
             }
             .backgroundImage("MainBackground")
         }

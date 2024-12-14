@@ -38,4 +38,34 @@ class CharacterAPI {
             completion(result)
         }
     }
+
+    struct CharacterCountResponse: Decodable {
+        let character_count: String
+    }
+
+    func countCharacters(uid: String, completion: @escaping (Result<Count, Error>) -> Void) {
+        var components = URLComponents(string: "https://p2flash.fynsv.net/character/count")!
+        components.queryItems = [URLQueryItem(name: "uid", value: uid)]
+
+        guard let url = components.url else {
+            completion(.failure(NSError(domain: "InvalidURL", code: -1)))
+            return
+        }
+
+        print("countCharacters: \(url)")
+
+        NetworkManager.shared.get(url: url) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let response = try JSONDecoder().decode(CharacterCountResponse.self, from: data)
+                    completion(.success(Count(character_count: response.character_count)))
+                } catch {
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 }

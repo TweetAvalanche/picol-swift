@@ -17,3 +17,7 @@ struct User: Codable {
 struct Token: Codable {
     let token: String
 }
+
+struct Count: Codable {
+    let character_count: Int
+}
