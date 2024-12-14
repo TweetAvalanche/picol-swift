@@ -10,7 +10,7 @@ struct CameraView: View {
     @State private var showingImagePreview = false
     
     var body: some View {
-        VStack {
+        ZStack {
             GeometryReader { geometry in
                 CameraPreview(session: cameraService.getSession())
                     .aspectRatio(2/3, contentMode: .fit)
@@ -18,26 +18,30 @@ struct CameraView: View {
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
-            .padding(30)
-            Button(action: {
-                if cameraService.isAuthorized {
-                    cameraService.capturePhoto()
-                    showingImagePreview = true
+            .padding(.top, 25)
+            VStack{
+                Spacer()
+                Button(action: {
+                    if cameraService.isAuthorized {
+                        cameraService.capturePhoto()
+                        showingImagePreview = true
+                    }
+                }) {
+                    Circle()
+                        .stroke(lineWidth: 5)
+                        .foregroundColor(.white)
+                        .frame(width: 70, height: 70)
+                        .overlay(
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 60, height: 60)
+                        )
                 }
-            }) {
-                Circle()
-                    .stroke(lineWidth: 5)
-                    .foregroundColor(.white)
-                    .frame(width: 70, height: 70)
-                    .overlay(
-                        Circle()
-                            .fill(Color.white)
-                            .frame(width: 60, height: 60)
-                    )
             }
-            Spacer()
+            .padding(.bottom, 50.0)
+//            Spacer()
         }
-        .backgroundImage("MainBackground")
+        .backgroundImage("CameraBackground")
         .sheet(isPresented: $showingImagePreview) {
             CameraModalView(cameraService: cameraService)
         }
