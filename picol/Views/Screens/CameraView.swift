@@ -11,34 +11,42 @@ struct CameraView: View {
     
     var body: some View {
         ZStack {
-            GeometryReader { geometry in
-                CameraPreview(session: cameraService.getSession())
-                    .aspectRatio(2/3, contentMode: .fit)
-                    .padding(10)
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
-            }
-            .padding(.top, 25)
             VStack{
                 Spacer()
-                Button(action: {
-                    if cameraService.isAuthorized {
-                        cameraService.capturePhoto()
-                        showingImagePreview = true
-                    }
-                }) {
-                    Circle()
-                        .stroke(lineWidth: 5)
-                        .foregroundColor(.white)
-                        .frame(width: 70, height: 70)
+                GeometryReader { geometry in
+                    CameraPreview(session: cameraService.getSession())
+                        .aspectRatio(2/3, contentMode: .fit)
                         .overlay(
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 60, height: 60)
+                            VStack{
+                                Spacer()
+                                Button(action: {
+                                    if cameraService.isAuthorized {
+                                        cameraService.capturePhoto()
+                                        showingImagePreview = true
+                                    }
+                                }) {
+                                    Circle()
+                                        .stroke(lineWidth: 5)
+                                        .foregroundColor(.white)
+                                        .frame(width: 70, height: 70)
+                                        .overlay(
+                                            Circle()
+                                                .fill(Color.white)
+                                                .frame(width: 60, height: 60)
+                                        )
+                                        .padding(.bottom, 15.0)
+                                }
+                            }
                         )
+                        .padding(10)
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
                 }
+                            .padding(.top, 40)
+//                Spacer()
             }
-            .padding(.bottom, 50.0)
+//
+//            .padding(.bottom, 50.0)
 //            Spacer()
         }
         .backgroundImage("CameraBackground")
