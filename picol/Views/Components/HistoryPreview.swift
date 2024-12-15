@@ -45,12 +45,13 @@ struct HistoryPreview: View {
                         }
                         Spacer()
                         
-                        Image(systemName: "star")
+                        Image(systemName: defaultCharacter == user.character_param ?  "star.fill" : "star")
                             .font(.system(size: 40))
-                            .foregroundColor(.bgButton)
+                            .foregroundColor(.yellow)
                             .onTapGesture {
                                 print("star tapped")
                                 characterViewModel.putDefaultCharacter(cid: String(user.cid)) {
+                                    print("defaultCharacter更新")
                                     defaultCharacter = user.character_param
                                 }
                             }

@@ -108,6 +108,7 @@ class CharacterViewModel: ObservableObject {
                 case .success(let user):
                     print("put default character success")
                     print(user)
+                    completion()
                 case .failure(let error):
                     print("put default character failure")
                     print(error)
