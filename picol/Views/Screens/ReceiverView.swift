@@ -17,12 +17,13 @@ struct ReceiverView: View {
                 
                 VStack{
                     Text("メッセージを受信")
-                        .font(.title)
+                        .font(.custom("BestTenDOT", size: 32))
                         .foregroundColor(Color.white)
                         .padding(.top, 40.0)
                     Text("\(flashReceiver.statusText)")
-                        .font(.system(size: 20))
+                        .font(.custom("BestTenDOT", size: 24))
                         .foregroundColor(Color.white)
+                        .padding(.top, 5.0)
                 }
                 Spacer()
                 Image("Picol\(viewModel.type)Back1")

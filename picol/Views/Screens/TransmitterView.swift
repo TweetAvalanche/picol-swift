@@ -21,7 +21,7 @@ struct TransmitterView: View {
     var body: some View {
         VStack {
             Text("メッセージを送信")
-                .font(.title)
+                .font(.custom("BestTenDOT", size: 32))
                 .foregroundColor(Color.white)
                 .padding(.top, 40.0)
             HStack{
@@ -30,8 +30,6 @@ struct TransmitterView: View {
                 }, label: {
                     Image(systemName: "trash.fill")
                         .font(.system(size: 24))
-//                        .padding()
-//                        .backgroundColor("bgButton")
                         .foregroundColor(.white)
                         .frame(width: 30.0, height: 30.0)
                         .cornerRadius(10)

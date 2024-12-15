@@ -13,7 +13,7 @@ struct CameraView: View {
         ZStack {
             VStack{
                 Text("ぴこるーを探す")
-                    .font(.title)
+                    .font(.custom("BestTenDOT", size: 32))
                     .foregroundColor(Color.white)
                     .padding(.top, 20.0)
                 Spacer()
@@ -46,12 +46,8 @@ struct CameraView: View {
                         .cornerRadius(10)
                         .shadow(radius: 5)
                 }
-                            .padding(.top, 40)
-//                Spacer()
+                .padding(.top, 40)
             }
-//
-//            .padding(.bottom, 50.0)
-//            Spacer()
         }
         .backgroundImage("CameraBackground")
         .sheet(isPresented: $showingImagePreview) {

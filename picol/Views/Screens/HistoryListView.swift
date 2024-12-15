@@ -15,6 +15,10 @@ struct HistoryListView: View {
         VStack {
             if !characterViewModel.isLoading {
                 // characterViewModel.charactersをループで回してHistoryPreviewを表示
+                Text("今まで見つけたぴこるー")
+                    .font(.custom("BestTenDOT", size: 28))
+                    .foregroundColor(.white)
+                    .padding(.vertical, 5.0)
                 ScrollView {
                     LazyVStack {
                         ForEach(characterViewModel.characterList, id: \.cid) { character in

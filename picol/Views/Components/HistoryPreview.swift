@@ -34,7 +34,7 @@ struct HistoryPreview: View {
                             
                             ZStack{
                                 Text(user.character_name)
-                                    .font(.system(size: 25))
+                                    .font(.custom("BestTenDOT", size: 20))
                                     .multilineTextAlignment(.leading)
                                 Rectangle()
                                     .frame(width: 130, height: 8)

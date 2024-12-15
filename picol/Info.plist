@@ -7,5 +7,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>BestTen-CRT.otf</string>
+		<string>BestTen-DOT.otf</string>
+	</array>
 </dict>
 </plist>
