@@ -29,7 +29,7 @@ struct CameraModalView: View {
                 } else if let user = characterViewModel.user {
                     VStack {
                         Text("新しいぴこるーを発見!")
-                            .font(.custom("BestTenDOT", size: 32))
+                            .font(.custom("BestTenDOT", size: 28))
                             .foregroundColor(.white)
                             .padding()
                         PicolImage()
