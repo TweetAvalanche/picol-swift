@@ -7,7 +7,7 @@ import Foundation
 
 class UserAPI {
     func createUser(completion: @escaping (Result<User, Error>) -> Void) {
-        guard let url = URL(string: "https://p2flash.fynsv.net/user") else {
+        guard let url = URL(string: "https://p2flash.uiro.net/user") else {
             completion(.failure(NSError(domain: "InvalidURL", code: -1)))
             return
         }
@@ -18,7 +18,7 @@ class UserAPI {
     }
 
     func fetchUser(uid: String, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/user")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/user")!
         components.queryItems = [URLQueryItem(name: "uid", value: uid)]
 
         guard let url = components.url else {
@@ -32,7 +32,7 @@ class UserAPI {
     }
     
     func putUserMessage(uid: String, message: String, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/user/message")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/user/message")!
         components.queryItems = [URLQueryItem(name: "uid", value: uid), URLQueryItem(name: "message", value: message)]
 
         guard let url = components.url else {

@@ -8,7 +8,7 @@ import UIKit
 
 class CharacterAPI {
     func postCharacter(uid: String, fileURL: URL, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/character")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/character")!
         components.queryItems = [URLQueryItem(name: "uid", value: uid)]
 
         guard let url = components.url else {
@@ -24,7 +24,7 @@ class CharacterAPI {
     }
     
     func putCharacterRename(cid: String, name: String, isDefault: Bool, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/character/rename")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/character/rename")!
         components.queryItems = [URLQueryItem(name: "cid", value: cid), URLQueryItem(name: "character_name", value: name), URLQueryItem(name: "make_default=1", value: isDefault ? "1" : "0")]
 
         guard let url = components.url else {
@@ -40,7 +40,7 @@ class CharacterAPI {
     }
     
     func getAllCharacter(uid: String, completion: @escaping (Result<[User], Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/character/all")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/character/all")!
         components.queryItems = [URLQueryItem(name: "uid", value: uid)]
 
         guard let url = components.url else {
@@ -56,7 +56,7 @@ class CharacterAPI {
     }
     
     func putDefaultCharacter(cid: String, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/character/default")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/character/default")!
         components.queryItems = [URLQueryItem(name: "cid", value: cid)]
         
         guard let url = components.url else {

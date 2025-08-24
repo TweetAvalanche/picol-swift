@@ -7,7 +7,7 @@ import Foundation
 
 class TokenAPI {
     func createToken(uid: String, completeion: @escaping (Result<Token, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/token")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/token")!
         components.queryItems = [URLQueryItem(name: "uid", value: uid)]
         
         guard let url = components.url else {
@@ -21,7 +21,7 @@ class TokenAPI {
     }
     
     func fetchToken(token: String, completion: @escaping (Result<User, Error>) -> Void) {
-        var components = URLComponents(string: "https://p2flash.fynsv.net/token")!
+        var components = URLComponents(string: "https://p2flash.uiro.net/token")!
         components.queryItems = [URLQueryItem(name: "token", value: token)]
         
         guard let url = components.url else {
